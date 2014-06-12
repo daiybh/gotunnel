@@ -3,7 +3,7 @@
 //   author: xjdrew
 //
 
-package main
+package tunnel
 
 import (
 	"encoding/json"
@@ -158,6 +158,17 @@ func (self *BackClient) Start() error {
 	return nil
 }
 
+func (self *BackClient) Reload() error {
+	Info("reload services")
+	upstream, err := self.readSettings()
+	if err != nil {
+		Error("back client reload failed:%v", err)
+		return err
+	}
+	self.upstream = upstream
+	return nil
+}
+
 func (self *BackClient) Stop() {
 }
 
@@ -167,7 +178,7 @@ func (self *BackClient) Wait() {
 
 func NewBackClient() *BackClient {
 	backClient := new(BackClient)
-	backClient.configFile = options.configFile
-	backClient.backAddr = options.backAddr
+	backClient.configFile = options.ConfigFile
+	backClient.backAddr = options.BackAddr
 	return backClient
 }
